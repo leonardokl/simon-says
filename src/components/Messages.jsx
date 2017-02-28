@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 
 const styles = {
   wrapper: {
@@ -10,11 +10,30 @@ const styles = {
   }
 }
 
-const Messages = ({ children }) => (
-  <div style={styles.wrapper}>
-    {children}
-  </div>
-)
+class Messages extends PureComponent {
+  scrollToBottom = () => {
+    const {scrollHeight, clientHeight} = this.el
+    const maxScrollTop = scrollHeight - clientHeight
+
+    this.el.scrollTop = maxScrollTop > 0
+      ? maxScrollTop
+      : 0
+  }
+
+  componentDidUpdate () {
+    this.scrollToBottom()
+  }
+
+  render () {
+    const { children } = this.props
+
+    return (
+      <div ref={(el) => (this.el = el)}style={styles.wrapper}>
+        {children}
+      </div>
+    )
+  }
+}
 
 Messages.propTypes = {
   children: PropTypes.any

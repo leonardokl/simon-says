@@ -100,7 +100,6 @@ class SendMessage extends Component {
   }
 
   render () {
-    console.log('this.state', this.state)
     const { recording, message } = this.state
 
     return (

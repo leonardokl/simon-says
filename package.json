@@ -1,11 +1,11 @@
 {
-  "name": "bot",
+  "name": "simon-says",
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "webpack && webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack --env.prod=true"
+    "build": "NODE_ENV=production webpack --env.prod=true"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
