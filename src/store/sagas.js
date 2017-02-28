@@ -1,3 +1,5 @@
+/* global responsiveVoice */
+
 import { call, put, takeEvery } from 'redux-saga/effects'
 import * as actions from './actions'
 import { delay } from 'utils'
@@ -20,9 +22,14 @@ function* handleSendMessage ({ payload: { text } }) {
   yield put(actions.createMessage(getRandomMesage()))
 }
 
+function* handleCreateMessage ({ payload: { text, bot } }) {
+  if (bot) responsiveVoice.speak(text, 'Brazilian Portuguese Female')
+}
+
 export default function* () {
   yield [
     takeEvery(actions.init.toString(), handleInit),
-    takeEvery(actions.sendMessage.toString(), handleSendMessage)
+    takeEvery(actions.sendMessage.toString(), handleSendMessage),
+    takeEvery(actions.createMessage.toString(), handleCreateMessage)
   ]
 }
