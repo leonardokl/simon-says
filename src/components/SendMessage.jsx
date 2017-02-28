@@ -6,7 +6,9 @@ const styles = {
     borderRadius: '500em',
     outline: 'none',
     borderColor: 'rgba(34,36,38,.15)',
-    boxShadow: '0 1px 1px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.19)'
+    boxShadow: 'rgba(0, 0, 0, 0.2) 0px 1px 1px 0px',
+    height: 54,
+    fontSize: 16
   }
 }
 
@@ -26,8 +28,11 @@ class SendMessage extends Component {
   sendMessage = () => {
     const { message } = this.state
 
-    console.log('message: ', message)
-    this.setState({message: ''})
+    if (message.trim()) {
+      this.setState({message: ''}, () => {
+        this.props.onSend(message)
+      })
+    }
   }
 
   handleInputChange = ({ target: { value } }) => {
@@ -120,8 +125,8 @@ class SendMessage extends Component {
   }
 }
 
-SendMessage.PropTypes = {
-
+SendMessage.propTypes = {
+  onSend: PropTypes.func
 }
 
 export default SendMessage

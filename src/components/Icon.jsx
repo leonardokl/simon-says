@@ -3,7 +3,7 @@ import cn from 'classnames'
 
 const Icon = ({ color, name, inverted, circular, link, onClick }) => (
   <i
-    className={cn(`icon ${name}`, { [color]: color, inverted, circular, link })}
+    className={cn(`icon ${name} large`, { [color]: color, inverted, circular, link })}
     onClick={onClick}
   />
 )

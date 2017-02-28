@@ -15,7 +15,7 @@ const Input = ({
   onChange,
   onKeyPress
 }) => (
-  <div className={cn('ui input', { icon })}>
+  <div style={{marginTop: 10}} className={cn('ui input', { icon })}>
     <input
       style={style}
       type='text'
