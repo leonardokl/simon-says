@@ -1,10 +1,10 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { AppWrapper, AppHeader, Messages, Message, SendMessage } from 'components'
 import { getMessages } from 'store/selectors'
 import * as actions from 'store/actions'
 
-class App extends Component {
+class App extends PureComponent {
   componentDidMount () {
     this.props.onDidMount()
   }
