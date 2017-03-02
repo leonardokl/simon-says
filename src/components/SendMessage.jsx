@@ -1,8 +1,6 @@
-/* globals Blob, MediaRecorder */
-
 import React, { Component, PropTypes } from 'react'
 import { Input, Icon } from 'components'
-import { blobToBase64String } from 'blob-util'
+import { recognizeSpeech } from 'utils'
 
 const styles = {
   input: {
@@ -14,10 +12,6 @@ const styles = {
     fontSize: 16
   }
 }
-
-let mediaStream
-let mediaRecorder
-let chunks = []
 
 class SendMessage extends Component {
   constructor (props) {
@@ -53,34 +47,13 @@ class SendMessage extends Component {
   }
 
   startRecording = () => {
-    navigator.mediaDevices.getUserMedia({audio: true})
-      .then((stream) => {
-        mediaStream = stream
-        mediaRecorder = new MediaRecorder(stream)
-
-        mediaRecorder.start()
-        mediaRecorder.ondataavailable = (e) => {
-          chunks.push(e.data)
-        }
-
-        this.setState({ recording: true })
-      })
-      .catch((err) => console.error(err))
-  }
-
-  stopRecording = () => {
-    mediaRecorder.stop()
-    const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' })
-    const [audioStream] = mediaStream.getAudioTracks()
-
-    chunks = []
-
-    audioStream.stop()
-
-    blobToBase64String(blob)
-      .then((res) => console.log('BASE 64: ', res))
-
-    this.setState({ recording: false })
+    this.setState({ recording: true }, () => {
+      recognizeSpeech()
+      .then(({ transcript }) => this.setState({ message: transcript }))
+      .then(this.sendMessage)
+      .catch(console.error)
+      .then(() => this.setState({ recording: false }))
+    })
   }
 
   renderRecordingIcon = () => {
@@ -102,7 +75,6 @@ class SendMessage extends Component {
         inverted
         circular
         link
-        onClick={this.stopRecording}
       />
     )
 
