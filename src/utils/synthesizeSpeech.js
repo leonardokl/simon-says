@@ -2,7 +2,7 @@
 
 const speechSynthesis = window.speechSynthesis
 
-const synthesizeSpeech = (text, { lang = 'pt-BR'} = {}) => {
+const synthesizeSpeech = (text, { lang = 'pt-BR' } = {}) => {
   const utterThis = new SpeechSynthesisUtterance(text)
   const voices = speechSynthesis.getVoices()
   const selectedVoice = voices.find(i => i.lang === lang)

@@ -2,12 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import * as actions from './actions'
 import { delay, synthesizeSpeech } from 'utils'
 import Const from 'constants.js'
-
-const getRandomMesage = () => {
-  const { messages } = Const
-
-  return messages[Math.floor((Math.random() * messages.length))]
-}
+import axios from 'axios'
 
 function* handleInit () {
   yield call(delay)
@@ -16,8 +11,18 @@ function* handleInit () {
 
 function* handleSendMessage ({ payload: { text } }) {
   yield put(actions.createMessage({ text, bot: false }))
-  yield call(delay)
-  yield put(actions.createMessage(getRandomMesage()))
+
+  try {
+    const { data: { botsay } } = yield call(axios.get, `${Const.api}${text}`)
+
+    yield put(actions.createMessage({ text: botsay, bot: true }))
+  } catch (err) {
+    console.error(err)
+    yield put(actions.createMessage({
+      text: 'Não posso responder no momento, estou passando por uma manutenção',
+      bot: true
+    }))
+  }
 }
 
 function* handleCreateMessage ({ payload: { text, bot } }) {
