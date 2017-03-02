@@ -1,6 +1,6 @@
+/* globals Blob, MediaRecorder */
+
 import React, { Component, PropTypes } from 'react'
-import Recorder from 'utils/recorder'
-import { blobToBase64 } from 'utils'
 import { Input, Icon } from 'components'
 import { blobToBase64String } from 'blob-util'
 
@@ -15,39 +15,14 @@ const styles = {
   }
 }
 
-let audioContext
-let recorder
+let mediaStream
+let mediaRecorder
+let chunks = []
 
 class SendMessage extends Component {
   constructor (props) {
     super(props)
     this.state = this.initialState
-  }
-
-  startUserMedia = (stream) => {
-    var input = audioContext.createMediaStreamSource(stream)
-
-    recorder = new Recorder(input)
-  }
-
-  enableAudioContext = () => {
-    try {
-      window.AudioContext = window.AudioContext || window.webkitAudioContext
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia
-      window.URL = window.URL || window.webkitURL
-
-      audioContext = new AudioContext;
-      console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'))
-    } catch (e) {
-      alert('Não foi possível configurar o suporte ao audio!')
-    }
-
-    navigator.getUserMedia({audio: true}, this.startUserMedia, () => {
-      console.error('Não foi possível encontrar uma entrada de audio')
-    });
-  }
-  componentDidMount () {
-    this.enableAudioContext()
   }
 
   get initialState () {
@@ -78,25 +53,33 @@ class SendMessage extends Component {
   }
 
   startRecording = () => {
-    recorder && recorder.record()
+    navigator.mediaDevices.getUserMedia({audio: true})
+      .then((stream) => {
+        mediaStream = stream
+        mediaRecorder = new MediaRecorder(stream)
 
-    this.setState({ recording: true })
+        mediaRecorder.start()
+        mediaRecorder.ondataavailable = (e) => {
+          chunks.push(e.data)
+        }
+
+        this.setState({ recording: true })
+      })
+      .catch((err) => console.error(err))
   }
 
   stopRecording = () => {
-    try {
-      if (recorder) {console.log('recorder', recorder)
-        recorder.stop()
-        recorder.exportWAV((blob) => {
-          console.log('blob', blob)
-          blobToBase64String(blob)
-            .then(res => console.log(res))
-            .then(() => recorder.clear())
-        })
-      }
-    } catch (err) {
-      console.error(err)
-    }
+    mediaRecorder.stop()
+    const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' })
+    const [audioStream] = mediaStream.getAudioTracks()
+
+    chunks = []
+
+    audioStream.stop()
+
+    blobToBase64String(blob)
+      .then((res) => console.log('BASE 64: ', res))
+
     this.setState({ recording: false })
   }
 
