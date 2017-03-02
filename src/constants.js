@@ -5,7 +5,7 @@ export default {
       bot: true
     },
     {
-      text: 'Só digo uma coisa, Domingo ela não vai! Danadaa!!',
+      text: 'Só digo uma coisa, Domingo ela não vai!',
       bot: true
     },
     {
@@ -14,6 +14,10 @@ export default {
     },
     {
       text: 'Sabe de nada inocente!! Conheça meu lorem que é Tchan, Tchan, Tchannn!! Txu Txu Tu Paaaaa!! Vem, vem ordinária!!',
+      bot: true
+    },
+    {
+      text: 'Sabe de nada inocente!!',
       bot: true
     },
     {
@@ -29,7 +33,7 @@ export default {
       bot: true
     },
     {
-      text: 'Assim você mata o papai , viuu!! Danadaa!!',
+      text: 'Assim você mata o papai , viu!! Danada!!',
       bot: true
     }
   ]

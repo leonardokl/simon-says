@@ -1,8 +1,6 @@
-/* global responsiveVoice */
-
 import { call, put, takeEvery } from 'redux-saga/effects'
 import * as actions from './actions'
-import { delay } from 'utils'
+import { delay, synthesizeSpeech } from 'utils'
 import Const from 'constants.js'
 
 const getRandomMesage = () => {
@@ -23,7 +21,7 @@ function* handleSendMessage ({ payload: { text } }) {
 }
 
 function* handleCreateMessage ({ payload: { text, bot } }) {
-  if (bot) responsiveVoice.speak(text, 'Brazilian Portuguese Female')
+  if (bot) synthesizeSpeech(text)
 }
 
 export default function* () {
