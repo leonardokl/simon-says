@@ -1,5 +1,5 @@
 export default {
-  api: 'http://ec2-54-213-246-148.us-west-2.compute.amazonaws.com/chatbot/conversation_start.php?say=',
+  api: '//ec2-54-213-246-148.us-west-2.compute.amazonaws.com/chatbot/conversation_start.php?say=',
   messages: [
     {
       text: 'E que abundância meu irmão viuu!! Assim você vai matar o papai',
