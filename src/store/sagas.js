@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import * as actions from './actions'
-import { delay, synthesizeSpeech } from 'utils'
+import { delay, tts } from 'utils'
 import Const from 'constants.js'
 import axios from 'axios'
 
@@ -26,7 +26,7 @@ function* handleSendMessage ({ payload: { text } }) {
 }
 
 function* handleCreateMessage ({ payload: { text, bot } }) {
-  if (bot) synthesizeSpeech(text)
+  if (bot) tts.speak(text)
 }
 
 export default function* () {

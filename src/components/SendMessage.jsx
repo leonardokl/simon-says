@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Input, Icon } from 'components'
-import { recognizeSpeech } from 'utils'
+import recognizeSpeech from 'recognize-speech'
 
 const styles = {
   input: {
@@ -48,11 +48,11 @@ class SendMessage extends Component {
 
   startRecording = () => {
     this.setState({ recording: true }, () => {
-      recognizeSpeech()
-      .then(({ transcript }) => this.setState({ message: transcript }))
-      .then(this.sendMessage)
-      .catch(console.error)
-      .then(() => this.setState({ recording: false }))
+      recognizeSpeech({ lang: 'pt-BR' })
+        .then(({ transcript }) => this.setState({ message: transcript }))
+        .then(this.sendMessage)
+        .catch(console.error)
+        .then(() => this.setState({ recording: false }))
     })
   }
 
