@@ -1,5 +1,12 @@
+export const pandora = {
+  api: 'https://aiaas.pandorabots.com',
+  appId: '1409614358897',
+  userKey: '8d9e05af5baeb77bbb8e423c70b6ca73',
+  botName: 'simon'
+}
+
 export default {
-  api: '//ec2-54-213-246-148.us-west-2.compute.amazonaws.com/chatbot/conversation_start.php?say=',
+  pandora,
   messages: [
     {
       text: 'E que abundância meu irmão viuu!! Assim você vai matar o papai',

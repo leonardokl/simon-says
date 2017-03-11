@@ -1,25 +1,30 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import * as actions from './actions'
-import { delay, tts } from 'utils'
-import Const from 'constants.js'
-import axios from 'axios'
+import { tts, pandora } from 'utils'
 
 function* handleInit () {
-  yield call(delay)
-  yield put(actions.createMessage({ text: 'Olá!', bot: true }))
+  try {
+    const { data: { responses } } = yield call(pandora.talk, { input: 'oi' })
+
+    yield put(actions.createMessage({ text: responses[0], bot: true }))
+  } catch (err) {
+    yield put(actions.createMessage({
+      text: 'Desculpe, não posso responder no momento', bot: true
+    }))
+  }
 }
 
 function* handleSendMessage ({ payload: { text } }) {
   yield put(actions.createMessage({ text, bot: false }))
 
   try {
-    const { data: { botsay } } = yield call(axios.get, `${Const.api}${text}`)
+    const { data: { responses } } = yield call(pandora.talk, { input: text })
 
-    yield put(actions.createMessage({ text: botsay, bot: true }))
+    yield put(actions.createMessage({ text: responses[0], bot: true }))
   } catch (err) {
     console.error(err)
     yield put(actions.createMessage({
-      text: 'Não posso responder no momento, estou passando por uma manutenção',
+      text: 'Não posso responder no momento...',
       bot: true
     }))
   }
