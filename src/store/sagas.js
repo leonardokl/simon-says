@@ -1,12 +1,16 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
 import * as actions from './actions'
 import { tts, pandora } from 'utils'
+import { getSessionId } from 'store/selectors'
 
 function* handleInit () {
   try {
-    const { data: { responses } } = yield call(pandora.talk, { input: 'oi' })
+    const { data: { responses, sessionid } } = yield call(pandora.talk, { input: 'oi' })
 
-    yield put(actions.createMessage({ text: responses[0], bot: true }))
+    yield [
+      put(actions.createMessage({ text: responses[0], bot: true })),
+      put(actions.setSessionId(sessionid))
+    ]
   } catch (err) {
     yield put(actions.createMessage({
       text: 'Desculpe, não posso responder no momento', bot: true
@@ -15,10 +19,12 @@ function* handleInit () {
 }
 
 function* handleSendMessage ({ payload: { text } }) {
+  const sessionId = yield select(getSessionId)
+
   yield put(actions.createMessage({ text, bot: false }))
 
   try {
-    const { data: { responses } } = yield call(pandora.talk, { input: text })
+    const { data: { responses } } = yield call(pandora.talk, { sessionId, input: text })
 
     yield put(actions.createMessage({ text: responses[0], bot: true }))
   } catch (err) {
